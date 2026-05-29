@@ -79,7 +79,6 @@
   #intro-container {
     position: fixed;
     inset: 0;
-    background: #000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -95,6 +94,18 @@
     pointer-events: none;
   }
 
+  /* Layer 1: stretched + heavily blurred fill — eliminates black bars on any aspect ratio */
+  #intro-bg {
+    position: absolute;
+    inset: -10%;
+    width: 120%;
+    height: 120%;
+    object-fit: cover;
+    filter: blur(30px) brightness(0.35);
+    transform: scale(1.1);
+  }
+
+  /* Layer 2: the actual blurred thumbnail, centered, covers as much as it can */
   #intro-thumbnail {
     position: absolute;
     inset: 0;
@@ -102,7 +113,6 @@
     height: 100%;
     object-fit: cover;
     filter: blur(8px);
-    transform: scale(1.05);
     transition: opacity 0.5s ease;
   }
 
@@ -163,6 +173,9 @@
 
 <!-- INTRO -->
 <div id="intro-container">
+  <!-- Layer 1: blurred fill — covers any aspect ratio gap -->
+  <img id="intro-bg" src="resource/image/intro-thumb.webp" alt="" aria-hidden="true" />
+  <!-- Layer 2: blurred thumbnail -->
   <img id="intro-thumbnail" src="resource/image/intro-thumb.webp" alt="Intro Thumbnail" />
 
   <!-- Centred play group -->
@@ -399,6 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fade out thumbnail and play button, show skip
     thumbnail.style.opacity = "0";
+    document.getElementById("intro-bg").style.opacity = "0";
     document.getElementById("play-btn").style.opacity = "0";
     document.getElementById("play-btn").style.pointerEvents = "none";
     skip.classList.add("visible");
