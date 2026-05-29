@@ -1,0 +1,26 @@
+{
+  "name": "x",
+  "version": "1.0.0",
+  "description": "",
+  "main": "playwright.config.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "playwright test tests/e2e.spec.js --reporter=list"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x-talks/x.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/x-talks/x/issues"
+  },
+  "homepage": "https://github.com/x-talks/x#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}
