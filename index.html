@@ -6,60 +6,96 @@
 <title>Master Blog</title>
 
 <style>
-  /* Base */
+  /* ── Base ── */
+  *, *::before, *::after { box-sizing: border-box; }
+
   body {
     font-family: monospace;
     background: #fff;
     color: #000;
     margin: 0;
     padding: 0;
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
     line-height: 1.6;
-    box-sizing: border-box;
   }
 
-  /* Header */
+  /* ── Header ── */
   header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1rem;
+    padding: 1rem clamp(1rem, 5vw, 2rem);
     border-bottom: 1px solid #ccc;
     gap: 1rem;
   }
 
-  .logo-placeholder { width: clamp(60px, 20vw, 120px); }
-  .profile-image { width: clamp(60px, 20vw, 120px); }
+  .logo-placeholder { width: clamp(60px, 15vw, 120px); height: auto; display: block; }
+  .profile-image    { width: clamp(60px, 15vw, 120px); height: auto; max-width: 100%; }
 
-  /* Nav */
-  nav ul {
+  /* ── Nav — desktop ── */
+  nav { position: relative; }
+
+  #nav-list {
     list-style: none;
     padding: 0;
+    margin: 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 0.75rem 1.5rem;
-    margin: 0;
+    gap: 0.5rem 1.5rem;
   }
 
-  nav a {
+  #nav-list a {
     text-decoration: none;
     color: #000;
     font-weight: bold;
     cursor: pointer;
-    font-size: clamp(0.8rem, 3vw, 1rem);
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
   }
 
-  /* Main layout */
+  /* Hamburger button — hidden on desktop */
+  #nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    font-size: 1.5rem;
+    font-family: monospace;
+    line-height: 1;
+  }
+
+  /* ── Nav — mobile hamburger ── */
+  @media (max-width: 540px) {
+    #nav-toggle { display: block; }
+
+    #nav-list {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 1rem 2rem;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    #nav-list.open { display: flex; }
+  }
+
+  /* ── Main layout ── */
   main {
     max-width: 900px;
     margin: 2rem auto;
-    padding: 0 clamp(0.75rem, 4vw, 1.5rem);
-    box-sizing: border-box;
+    padding: 0 clamp(1rem, 5vw, 2rem);
   }
 
   section { margin-bottom: 3rem; }
+
   section h2 {
     border-bottom: 1px solid #ccc;
     padding-bottom: 0.5rem;
@@ -68,24 +104,36 @@
     font-size: clamp(1rem, 4vw, 1.5rem);
   }
 
-  .subcategory, .format, .episode { display: none; margin-left: clamp(0.5rem, 3vw, 1rem); }
-  article p { display: none; margin: 0.25rem 0 0.5rem 1.5rem; white-space: pre-wrap; font-size: clamp(0.8rem, 3vw, 1rem); }
-
-  @media (max-width: 480px) {
-    nav ul { gap: 0.5rem 1rem; }
+  .subcategory, .format, .episode {
+    display: none;
+    margin-left: clamp(0.5rem, 3vw, 1rem);
   }
 
-  /* Intro overlay */
+  article p {
+    display: none;
+    margin: 0.25rem 0 0.5rem 1.5rem;
+    white-space: pre-wrap;
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+  }
+
+  /* ── Intro overlay — inset with padding ── */
   #intro-container {
     position: fixed;
-    inset: 0;
+    /* 4vw/4vh breathing room on all sides — scales with viewport */
+    inset: 4vh 4vw;
+    border-radius: clamp(8px, 1.5vw, 16px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
     overflow: hidden;
+    transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+    /* Shadow so it floats above the white page */
+    box-shadow: 0 8px 40px rgba(0,0,0,0.45);
   }
+
+  /* White page background is visible around the inset box */
+  body.intro-active { overflow: hidden; }
 
   #intro-container.hide-animation {
     opacity: 0;
@@ -94,7 +142,7 @@
     pointer-events: none;
   }
 
-  /* Layer 1: stretched + heavily blurred fill — eliminates black bars on any aspect ratio */
+  /* Layer 1: blurred fill — covers aspect ratio gaps without black bars */
   #intro-bg {
     position: absolute;
     inset: -10%;
@@ -102,10 +150,9 @@
     height: 120%;
     object-fit: cover;
     filter: blur(30px) brightness(0.35);
-    transform: scale(1.1);
   }
 
-  /* Layer 2: the actual blurred thumbnail, centered, covers as much as it can */
+  /* Layer 2: blurred thumbnail */
   #intro-thumbnail {
     position: absolute;
     inset: 0;
@@ -116,7 +163,7 @@
     transition: opacity 0.5s ease;
   }
 
-  /* Play button centred over thumbnail */
+  /* Play button */
   #play-btn {
     position: relative;
     z-index: 10;
@@ -124,30 +171,29 @@
     flex-direction: column;
     align-items: center;
     gap: clamp(0.6rem, 2vw, 1rem);
+    transition: opacity 0.3s ease;
   }
 
   #play-btn svg {
-    width: clamp(60px, 12vw, 100px);
-    height: clamp(60px, 12vw, 100px);
+    width: clamp(56px, 10vw, 96px);
+    height: clamp(56px, 10vw, 96px);
     filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
     cursor: pointer;
-    transition: transform 0.15s ease, opacity 0.15s ease;
+    transition: transform 0.15s ease;
   }
 
   #play-btn svg:hover,
-  #play-btn svg:focus {
-    transform: scale(1.1);
-    outline: none;
-  }
+  #play-btn svg:focus { transform: scale(1.1); outline: none; }
 
+  /* Skip button */
   #skip-intro {
     position: absolute;
-    bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 0.75rem));
-    right: max(1.5rem, calc(env(safe-area-inset-right) + 0.75rem));
+    bottom: clamp(0.75rem, 3vh, 1.5rem);
+    right: clamp(0.75rem, 3vw, 1.5rem);
     z-index: 20;
-    padding: 0.45rem 1rem;
-    font-size: clamp(0.75rem, 2vw, 0.9rem);
-    background: rgba(255, 255, 255, 0.82);
+    padding: 0.4rem 0.9rem;
+    font-size: clamp(0.7rem, 2vw, 0.875rem);
+    background: rgba(255,255,255,0.85);
     border: none;
     border-radius: 5px;
     font-family: monospace;
@@ -158,14 +204,8 @@
     transition: background 0.15s ease, opacity 0.3s ease;
   }
 
-  #skip-intro.visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  #skip-intro:hover {
-    background: rgba(255, 255, 255, 1);
-  }
+  #skip-intro.visible { opacity: 1; pointer-events: auto; }
+  #skip-intro:hover   { background: #fff; }
 </style>
 </head>
 
@@ -173,21 +213,16 @@
 
 <!-- INTRO -->
 <div id="intro-container">
-  <!-- Layer 1: blurred fill — covers any aspect ratio gap -->
-  <img id="intro-bg" src="resource/image/intro-thumb.webp" alt="" aria-hidden="true" />
-  <!-- Layer 2: blurred thumbnail -->
+  <img id="intro-bg"        src="resource/image/intro-thumb.webp" alt="" aria-hidden="true" />
   <img id="intro-thumbnail" src="resource/image/intro-thumb.webp" alt="Intro Thumbnail" />
 
-  <!-- Centred play group -->
   <div id="play-btn">
-    <!-- Play icon -->
     <svg viewBox="0 0 100 100" role="button" tabindex="0" aria-label="Play intro video" id="play-icon">
       <circle cx="50" cy="50" r="48" fill="rgba(0,0,0,0.55)" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
       <polygon points="38,28 38,72 74,50" fill="rgba(255,255,255,0.95)"/>
     </svg>
   </div>
 
-  <!-- Skip button always visible once video starts -->
   <button id="skip-intro">Skip</button>
 </div>
 
@@ -195,14 +230,15 @@
   <img src="resource/image/logo.png" alt="Master Logo" class="logo-placeholder">
   <h1>Master Blog</h1>
 
-  <nav>
-    <ul>
-      <li><a onclick="showCategory('blog')">Blog</a></li>
-      <li><a onclick="showCategory('podcast')">Podcast</a></li>
-      <li><a onclick="showCategory('youtube')">YouTube</a></li>
-      <li><a onclick="showCategory('references')">Sources</a></li>
-      <li><a onclick="showCategory('aboutme')">About Me</a></li>
-      <li><a onclick="showCategory('all')">All</a></li>
+  <nav aria-label="Main navigation">
+    <button id="nav-toggle" aria-expanded="false" aria-controls="nav-list">&#9776;</button>
+    <ul id="nav-list">
+      <li><a onclick="showCategory('blog');closeNav()">Blog</a></li>
+      <li><a onclick="showCategory('podcast');closeNav()">Podcast</a></li>
+      <li><a onclick="showCategory('youtube');closeNav()">YouTube</a></li>
+      <li><a onclick="showCategory('references');closeNav()">Sources</a></li>
+      <li><a onclick="showCategory('aboutme');closeNav()">About Me</a></li>
+      <li><a onclick="showCategory('all');closeNav()">All</a></li>
     </ul>
   </nav>
 </header>
@@ -211,37 +247,23 @@
   <!-- BLOG -->
   <section id="blog-section" class="category">
     <h2 onclick="toggleSection(this)">Blog</h2>
-
     <div class="subcategory">
       <h3 onclick="toggleSubcategory(this)">Daily</h3>
       <div class="format">
         <h4 onclick="toggleFormat(this)">Episodes</h4>
         <div class="episode">
-          <article>
-            <h5 onclick="toggleEpisode(this)">Episode 1</h5>
-            <p>Inhalt für Daily, Episode 1.</p>
-          </article>
-          <article>
-            <h5 onclick="toggleEpisode(this)">Episode 2</h5>
-            <p>Inhalt für Daily, Episode 2.</p>
-          </article>
+          <article><h5 onclick="toggleEpisode(this)">Episode 1</h5><p>Inhalt für Daily, Episode 1.</p></article>
+          <article><h5 onclick="toggleEpisode(this)">Episode 2</h5><p>Inhalt für Daily, Episode 2.</p></article>
         </div>
       </div>
     </div>
-
     <div class="subcategory">
       <h3 onclick="toggleSubcategory(this)">Phenomenons</h3>
       <div class="format">
         <h4 onclick="toggleFormat(this)">Episodes</h4>
         <div class="episode">
-          <article>
-            <h5 onclick="toggleEpisode(this)">Episode 1</h5>
-            <p>Inhalt für Phenomenons, Episode 1.</p>
-          </article>
-          <article>
-            <h5 onclick="toggleEpisode(this)">Episode 2</h5>
-            <p>Inhalt für Phenomenons, Episode 2.</p>
-          </article>
+          <article><h5 onclick="toggleEpisode(this)">Episode 1</h5><p>Inhalt für Phenomenons, Episode 1.</p></article>
+          <article><h5 onclick="toggleEpisode(this)">Episode 2</h5><p>Inhalt für Phenomenons, Episode 2.</p></article>
         </div>
       </div>
     </div>
@@ -250,60 +272,38 @@
   <!-- PODCAST -->
   <section id="podcast-section" class="category">
     <h2 onclick="toggleSection(this)">Podcast</h2>
-
     <div class="subcategory">
       <h3 onclick="toggleSubcategory(this)">Detrapped</h3>
       <div class="format">
         <h4 onclick="toggleFormat(this)">Episodes</h4>
         <div class="episode">
-          <article>
-            <h5 onclick="toggleEpisode(this)">Episode 1</h5>
-            <p>Detrapped — Episode 1.</p>
-          </article>
-          <article>
-            <h5 onclick="toggleEpisode(this)">Episode 2</h5>
-            <p>Detrapped — Episode 2.</p>
-          </article>
+          <article><h5 onclick="toggleEpisode(this)">Episode 1</h5><p>Detrapped — Episode 1.</p></article>
+          <article><h5 onclick="toggleEpisode(this)">Episode 2</h5><p>Detrapped — Episode 2.</p></article>
         </div>
       </div>
     </div>
-
     <div class="subcategory">
       <h3 onclick="toggleSubcategory(this)">X-Talks</h3>
       <div class="format">
         <h4 onclick="toggleFormat(this)">Episodes</h4>
         <div class="episode">
-          <article>
-            <h5 onclick="toggleEpisode(this)">Episode 1</h5>
-            <p>X-Talks — Episode 1.</p>
-          </article>
-          <article>
-            <h5 onclick="toggleEpisode(this)">Episode 2</h5>
-            <p>X-Talks — Episode 2.</p>
-          </article>
+          <article><h5 onclick="toggleEpisode(this)">Episode 1</h5><p>X-Talks — Episode 1.</p></article>
+          <article><h5 onclick="toggleEpisode(this)">Episode 2</h5><p>X-Talks — Episode 2.</p></article>
         </div>
       </div>
     </div>
-
   </section>
 
   <!-- YOUTUBE -->
   <section id="youtube-section" class="category">
     <h2 onclick="toggleSection(this)">YouTube</h2>
-
     <div class="subcategory">
       <h3 onclick="toggleSubcategory(this)">Shorts</h3>
       <div class="format">
         <h4 onclick="toggleFormat(this)">Episodes</h4>
         <div class="episode">
-          <article>
-            <h5 onclick="toggleEpisode(this)">Episode 1</h5>
-            <p>Kurzvideo 1.</p>
-          </article>
-          <article>
-            <h5 onclick="toggleEpisode(this)">Episode 2</h5>
-            <p>Kurzvideo 2.</p>
-          </article>
+          <article><h5 onclick="toggleEpisode(this)">Episode 1</h5><p>Kurzvideo 1.</p></article>
+          <article><h5 onclick="toggleEpisode(this)">Episode 2</h5><p>Kurzvideo 2.</p></article>
         </div>
       </div>
     </div>
@@ -312,30 +312,21 @@
   <!-- REFERENCES -->
   <section id="references-section" class="category">
     <h2 onclick="toggleSection(this)">Sources</h2>
-
     <div class="subcategory">
       <h3 onclick="toggleSubcategory(this)">Axioms</h3>
       <div class="format">
         <h4 onclick="toggleFormat(this)">Episodes</h4>
         <div class="episode">
-          <article>
-            <h5 onclick="toggleEpisode(this)">Episode 1</h5>
-            <p>Axiom 1.</p>
-          </article>
-          <article>
-            <h5 onclick="toggleEpisode(this)">Episode 2</h5>
-            <p>Axiom 2.</p>
-          </article>
+          <article><h5 onclick="toggleEpisode(this)">Episode 1</h5><p>Axiom 1.</p></article>
+          <article><h5 onclick="toggleEpisode(this)">Episode 2</h5><p>Axiom 2.</p></article>
         </div>
       </div>
     </div>
-
   </section>
 
   <!-- ABOUT ME -->
   <section id="aboutme-section" class="category">
     <h2 onclick="toggleSection(this)">About Me</h2>
-
     <div class="subcategory">
       <h3 onclick="toggleSubcategory(this)">CV</h3>
       <div class="format">
@@ -349,18 +340,17 @@
       </div>
     </div>
   </section>
-
 </main>
 
 <script>
-/* Category Toggle */
+/* ── Category Toggle ── */
 function showCategory(category) {
   const sections = {
-    blog: document.getElementById('blog-section'),
-    podcast: document.getElementById('podcast-section'),
-    youtube: document.getElementById('youtube-section'),
+    blog:       document.getElementById('blog-section'),
+    podcast:    document.getElementById('podcast-section'),
+    youtube:    document.getElementById('youtube-section'),
     references: document.getElementById('references-section'),
-    aboutme: document.getElementById('aboutme-section')
+    aboutme:    document.getElementById('aboutme-section')
   };
   if (category === 'all') {
     for (const key in sections) sections[key].style.display = 'block';
@@ -369,23 +359,42 @@ function showCategory(category) {
       sections[key].style.display = key === category ? 'block' : 'none';
   }
 }
-function toggleSection(h) { h.parentElement.querySelectorAll('.subcategory').forEach(el => el.style.display = el.style.display === 'block' ? 'none' : 'block'); }
-function toggleSubcategory(h) { const f = h.nextElementSibling; if(f) f.style.display = f.style.display === 'block' ? 'none' : 'block'; }
-function toggleFormat(h) { const e = h.nextElementSibling; if(e) e.style.display = e.style.display === 'block' ? 'none' : 'block'; }
-function toggleEpisode(h) { const p = h.nextElementSibling; if(p) p.style.display = p.style.display === 'block' ? 'none' : 'block'; }
+function toggleSection(h)    { h.parentElement.querySelectorAll('.subcategory').forEach(el => el.style.display = el.style.display === 'block' ? 'none' : 'block'); }
+function toggleSubcategory(h){ const f = h.nextElementSibling; if(f) f.style.display = f.style.display === 'block' ? 'none' : 'block'; }
+function toggleFormat(h)     { const e = h.nextElementSibling; if(e) e.style.display = e.style.display === 'block' ? 'none' : 'block'; }
+function toggleEpisode(h)    { const p = h.nextElementSibling; if(p) p.style.display = p.style.display === 'block' ? 'none' : 'block'; }
 
 showCategory('all');
 
-/* INTRO VIDEO + Lazy-Load */
+/* ── Hamburger Nav ── */
+const navToggle = document.getElementById('nav-toggle');
+const navList   = document.getElementById('nav-list');
+
+navToggle.addEventListener('click', () => {
+  const open = navList.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', open);
+});
+
+function closeNav() {
+  navList.classList.remove('open');
+  navToggle.setAttribute('aria-expanded', 'false');
+}
+
+// Close nav when clicking outside
+document.addEventListener('click', e => {
+  if (!navToggle.contains(e.target) && !navList.contains(e.target)) closeNav();
+});
+
+/* ── Intro Video ── */
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("intro-container");
   const skip      = document.getElementById("skip-intro");
   const thumbnail = document.getElementById("intro-thumbnail");
+  const introBg   = document.getElementById("intro-bg");
   const playBtn   = document.getElementById("play-icon");
-  let video       = null;
+  let video = null;
 
   function hideIntro() {
-    // Stop & remove video so it cannot play in the background
     if (video) {
       video.pause();
       video.src = "";
@@ -398,11 +407,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadAndPlay() {
-    if (video) return; // already loaded
+    if (video) return;
     video = document.createElement("video");
-    video.src = "resource/video/intro.mp4";
-    video.autoplay = true;
-    video.muted = false;
+    video.src        = "resource/video/intro.mp4";
+    video.autoplay   = true;
+    video.muted      = false;
     video.playsInline = true;
     video.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:cover;";
     container.appendChild(video);
@@ -410,10 +419,9 @@ document.addEventListener("DOMContentLoaded", () => {
     video.addEventListener("ended", hideIntro);
     video.addEventListener("click", () => { video.paused ? video.play() : video.pause(); });
 
-    // Fade out thumbnail and play button, show skip
     thumbnail.style.opacity = "0";
-    document.getElementById("intro-bg").style.opacity = "0";
-    document.getElementById("play-btn").style.opacity = "0";
+    introBg.style.opacity   = "0";
+    document.getElementById("play-btn").style.opacity      = "0";
     document.getElementById("play-btn").style.pointerEvents = "none";
     skip.classList.add("visible");
   }

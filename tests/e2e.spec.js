@@ -67,11 +67,14 @@ test.describe('Intro overlay — full screen, no zoom', () => {
         return { top: r.top, left: r.left, width: r.width, height: r.height };
       });
 
-      // Overlay must fill the entire viewport — tolerance of 2px for subpixel rounding
-      expect(box.top).toBeLessThanOrEqual(2);
-      expect(box.left).toBeLessThanOrEqual(2);
-      expect(box.width).toBeGreaterThanOrEqual(vp.width - 2);
-      expect(box.height).toBeGreaterThanOrEqual(vp.height - 2);
+      // Overlay is inset (4vh/4vw padding) — must be inside viewport with breathing room
+      // and must cover at least 88% of viewport (100% - 2*4% = 92%, allow some tolerance)
+      expect(box.top).toBeGreaterThan(0);   // has top spacing
+      expect(box.left).toBeGreaterThan(0);  // has left spacing
+      expect(box.top).toBeLessThan(vp.height * 0.1);   // but not too much (max 10vh)
+      expect(box.left).toBeLessThan(vp.width * 0.1);   // but not too much (max 10vw)
+      expect(box.width).toBeGreaterThan(vp.width * 0.8);    // covers most of viewport
+      expect(box.height).toBeGreaterThan(vp.height * 0.8);  // covers most of viewport
 
       await ctx.close();
     });
