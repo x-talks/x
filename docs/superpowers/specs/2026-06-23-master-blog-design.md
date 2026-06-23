@@ -96,6 +96,14 @@ tags: []
 ---
 ```
 
+*About (single page):*
+```yaml
+---
+title: "About Me"
+profile_image: "resource/image/profile.png"
+---
+```
+
 **RSS:** Hugo auto-generates `/podcast/index.xml` — this URL is submitted to Spotify for Podcasters and Apple Podcasts Connect.
 
 **Tags:** Posts can have multiple tags. Hugo auto-generates `/tags/<tag>/` index pages.
