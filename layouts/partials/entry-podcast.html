@@ -1,0 +1,9 @@
+<div class="entry">
+  <div class="entry-tag">{{ .Params.series }}{{ if .Params.episode }} · Episode {{ .Params.episode }}{{ end }}</div>
+  <div class="entry-title">{{ .Title }}</div>
+  <div class="entry-meta">{{ .Date.Format "January 2, 2006" }}{{ if .Params.duration }} · {{ .Params.duration }}{{ end }}</div>
+  {{ if .Params.audio_url }}
+  <audio class="entry-audio" controls><source src="{{ .Params.audio_url }}" type="audio/mpeg"/></audio>
+  {{ end }}
+  <div class="entry-body">{{ .Content }}</div>
+</div>

@@ -1,0 +1,8 @@
+<div class="entry">
+  <div class="entry-tag">{{ .Params.series }}{{ if .Params.episode }} · #{{ .Params.episode }}{{ end }}</div>
+  <div class="entry-title">{{ .Title }}</div>
+  <div class="entry-meta">{{ .Date.Format "January 2, 2006" }} · External link</div>
+  <div class="entry-body">{{ .Content }}</div>
+  {{ if .Params.url }}<a class="entry-link" href="{{ .Params.url }}">→ Read the original source</a>{{ end }}
+  <span class="format-badge">LINK</span>
+</div>
