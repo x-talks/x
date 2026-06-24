@@ -2,9 +2,33 @@
   <div class="entry-tag">{{ .Params.series }}{{ if .Params.episode }} · Episode {{ .Params.episode }}{{ end }}</div>
   <div class="entry-title">{{ .Title }}</div>
   <div class="entry-meta">{{ .Date.Format "January 2, 2006" }}{{ if .Params.readtime }} · {{ .Params.readtime }} read{{ end }}</div>
-  {{ if .Params.image }}<img class="entry-image" src="/x/{{ .Params.image }}" alt="{{ .Title }}" />{{ end }}
+
+  {{/* Top images */}}
+  {{ range .Params.images }}{{ if eq .position "top" }}
+  <figure class="entry-figure">
+    <img class="entry-image" src="/x/{{ .src }}" alt="{{ .caption }}" />
+    {{ if .caption }}<figcaption class="entry-caption">{{ .caption }}</figcaption>{{ end }}
+  </figure>
+  {{ end }}{{ end }}
+
+  {{/* Inline-left images */}}
+  {{ range .Params.images }}{{ if eq .position "inline-left" }}
+  <figure class="entry-figure entry-figure--left">
+    <img class="entry-image-inline" src="/x/{{ .src }}" alt="{{ .caption }}" />
+    {{ if .caption }}<figcaption class="entry-caption">{{ .caption }}</figcaption>{{ end }}
+  </figure>
+  {{ end }}{{ end }}
+
+  {{/* Inline-right images */}}
+  {{ range .Params.images }}{{ if eq .position "inline-right" }}
+  <figure class="entry-figure entry-figure--right">
+    <img class="entry-image-inline" src="/x/{{ .src }}" alt="{{ .caption }}" />
+    {{ if .caption }}<figcaption class="entry-caption">{{ .caption }}</figcaption>{{ end }}
+  </figure>
+  {{ end }}{{ end }}
+
   <div class="entry-cols">
-    <div class="entry-body">{{ .Content }}</div>
+    <div class="entry-body">{{ .Content }}<div class="entry-clearfix"></div></div>
     {{ if .Params.pullquote }}
     <div class="entry-aside">
       <div class="pull-quote">"{{ .Params.pullquote }}"</div>
@@ -12,4 +36,13 @@
     </div>
     {{ end }}
   </div>
+
+  {{/* Bottom images */}}
+  {{ range .Params.images }}{{ if eq .position "bottom" }}
+  <figure class="entry-figure">
+    <img class="entry-image" src="/x/{{ .src }}" alt="{{ .caption }}" />
+    {{ if .caption }}<figcaption class="entry-caption">{{ .caption }}</figcaption>{{ end }}
+  </figure>
+  {{ end }}{{ end }}
+
 </div>

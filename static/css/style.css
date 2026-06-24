@@ -251,6 +251,58 @@
   /* ── Profile image ── */
   .profile-image { width: clamp(60px, 15vw, 120px); height: auto; max-width: 100%; filter: grayscale(1); }
 
+  /* ── Blog entry figures ── */
+  .entry-figure {
+    margin: 0 0 1rem;
+  }
+
+  .entry-caption {
+    font-family: monospace;
+    font-size: 0.58rem;
+    color: #888;
+    letter-spacing: 0.08em;
+    margin-top: 0.3rem;
+  }
+
+  .entry-figure--left {
+    float: left;
+    max-width: 40%;
+    margin: 0 1.25rem 0.75rem 0;
+  }
+
+  .entry-figure--right {
+    float: right;
+    max-width: 40%;
+    margin: 0 0 0.75rem 1.25rem;
+  }
+
+  .entry-image-inline {
+    width: 100%;
+    display: block;
+    filter: grayscale(1);
+  }
+
+  .entry-clearfix { clear: both; }
+
+  .entry-body blockquote {
+    border-left: 3px solid #000;
+    margin: 0.75rem 0 0.75rem 0;
+    padding-left: 1rem;
+    font-style: italic;
+    color: #444;
+  }
+
+  body.dark .entry-body blockquote { border-color: #e8e8e8; color: #aaa; }
+
+  @media (max-width: 600px) {
+    .entry-figure--left,
+    .entry-figure--right {
+      float: none;
+      max-width: 100%;
+      margin: 0 0 1rem;
+    }
+  }
+
   /* ── Intro overlay ── */
   #intro-container {
     position: fixed;
