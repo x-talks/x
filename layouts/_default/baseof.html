@@ -30,12 +30,12 @@
   <nav aria-label="Main navigation">
     <button id="nav-toggle" aria-expanded="false" aria-controls="nav-list">&#9776;</button>
     <ul id="nav-list" style="list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:0.5rem 1.5rem;align-items:center;">
-      <li><a href="/x/#blog-section">Blog</a></li>
-      <li><a href="/x/#podcast-section">Podcast</a></li>
-      <li><a href="/x/#youtube-section">YouTube</a></li>
-      <li><a href="/x/#references-section">Sources</a></li>
-      <li><a href="/x/#aboutme-section">About Me</a></li>
-      <li><a href="/x/">All</a></li>
+      <li><a href="#" onclick="showCategory('blog');closeNav();return false;">Blog</a></li>
+      <li><a href="#" onclick="showCategory('podcast');closeNav();return false;">Podcast</a></li>
+      <li><a href="#" onclick="showCategory('youtube');closeNav();return false;">YouTube</a></li>
+      <li><a href="#" onclick="showCategory('references');closeNav();return false;">Sources</a></li>
+      <li><a href="#" onclick="showCategory('aboutme');closeNav();return false;">About Me</a></li>
+      <li><a href="#" onclick="showCategory('all');closeNav();return false;">All</a></li>
     </ul>
     <button id="dark-btn" aria-label="Toggle dark mode" onclick="toggleDark()">☽</button>
   </nav>
