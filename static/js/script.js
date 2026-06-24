@@ -21,7 +21,7 @@ function toggleSection(h) {
   });
 }
 
-showCategory('all');
+document.addEventListener('DOMContentLoaded', () => showCategory('all'));
 
 /* ── Hamburger nav ── */
 const navToggle = document.getElementById('nav-toggle');
