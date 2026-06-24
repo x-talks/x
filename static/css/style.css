@@ -155,7 +155,7 @@
 
   .entry-title {
     font-family: Georgia, serif;
-    font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+    font-size: clamp(0.95rem, 2.5vw, 1.2rem);
     line-height: 1.15;
     margin-bottom: 0.3rem;
     font-weight: normal;
