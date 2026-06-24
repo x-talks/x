@@ -13,7 +13,7 @@
   /* ── Dark mode ── */
   body.dark { background: #0d0d0d; color: #e8e8e8; }
   body.dark header { border-color: #333; }
-  body.dark section h2 { border-color: #333; }
+  body.dark section h2 { border-color: #333; border-top-color: #e8e8e8; }
   body.dark .entry-tag { border-color: #e8e8e8; }
   body.dark .entry-aside { border-color: #e8e8e8; }
   body.dark .entry-divider { background: #333; }
@@ -127,15 +127,17 @@
 
   section h2 {
     font-family: monospace;
+    border-top: 3px solid #000;
     border-bottom: 1px solid #000;
-    padding-bottom: 0.5rem;
+    padding: 0.4rem 0 0.4rem;
     margin-bottom: 1.5rem;
     cursor: pointer;
     font-size: clamp(0.85rem, 3vw, 1rem);
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    font-weight: normal;
+    font-weight: bold;
   }
+  body.dark section h2 { border-top-color: #e8e8e8; }
 
   /* ── Entry structure ── */
   .entry { margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid #ddd; }
