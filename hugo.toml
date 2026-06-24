@@ -1,5 +1,5 @@
 baseURL = "https://x-talks.github.io/x/"
-languageCode = "en-us"
+locale = "en-US"
 title = "Master Blog"
 
 [outputs]
