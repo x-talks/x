@@ -1,0 +1,8 @@
+{{ define "main" }}
+<article>
+  {{ if eq .Section "blog" }}{{ partial "entry-blog.html" . }}{{ end }}
+  {{ if eq .Section "podcast" }}{{ partial "entry-podcast.html" . }}{{ end }}
+  {{ if eq .Section "youtube" }}{{ partial "entry-youtube.html" . }}{{ end }}
+  {{ if eq .Section "sources" }}{{ partial "entry-source.html" . }}{{ end }}
+</article>
+{{ end }}
