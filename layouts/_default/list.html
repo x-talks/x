@@ -1,0 +1,11 @@
+{{ define "main" }}
+<section>
+  <h2>{{ .Title }}</h2>
+  {{ range .Pages }}
+    {{ if eq .Section "blog" }}{{ partial "entry-blog.html" . }}{{ end }}
+    {{ if eq .Section "podcast" }}{{ partial "entry-podcast.html" . }}{{ end }}
+    {{ if eq .Section "youtube" }}{{ partial "entry-youtube.html" . }}{{ end }}
+    {{ if eq .Section "sources" }}{{ partial "entry-source.html" . }}{{ end }}
+  {{ end }}
+</section>
+{{ end }}

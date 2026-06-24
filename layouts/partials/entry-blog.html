@@ -1,0 +1,15 @@
+<div class="entry">
+  <div class="entry-tag">{{ .Params.series }}{{ if .Params.episode }} · Episode {{ .Params.episode }}{{ end }}</div>
+  <div class="entry-title">{{ .Title }}</div>
+  <div class="entry-meta">{{ .Date.Format "January 2, 2006" }}{{ if .Params.readtime }} · {{ .Params.readtime }} read{{ end }}</div>
+  {{ if .Params.image }}<img class="entry-image" src="/x/{{ .Params.image }}" alt="{{ .Title }}" />{{ end }}
+  <div class="entry-cols">
+    <div class="entry-body">{{ .Content }}</div>
+    {{ if .Params.pullquote }}
+    <div class="entry-aside">
+      <div class="pull-quote">"{{ .Params.pullquote }}"</div>
+      {{ if .Params.readtime }}<div style="font-size:0.62rem;color:#888;margin-top:0.5rem;font-family:monospace">{{ .Params.readtime }} read <span class="format-badge">TEXT</span></div>{{ end }}
+    </div>
+    {{ end }}
+  </div>
+</div>
