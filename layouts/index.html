@@ -1,0 +1,52 @@
+{{ define "main" }}
+
+<!-- BLOG -->
+<section id="blog-section" class="category">
+  <h2 onclick="toggleSection(this)">Blog</h2>
+  {{ range where .Site.RegularPages "Section" "blog" }}
+    {{ partial "entry-blog.html" . }}
+  {{ end }}
+</section>
+
+<!-- PODCAST -->
+<section id="podcast-section" class="category">
+  <h2 onclick="toggleSection(this)">Podcast</h2>
+  {{ range where .Site.RegularPages "Section" "podcast" }}
+    {{ partial "entry-podcast.html" . }}
+  {{ end }}
+</section>
+
+<!-- YOUTUBE -->
+<section id="youtube-section" class="category">
+  <h2 onclick="toggleSection(this)">YouTube</h2>
+  {{ range where .Site.RegularPages "Section" "youtube" }}
+    {{ partial "entry-youtube.html" . }}
+  {{ end }}
+</section>
+
+<!-- REFERENCES -->
+<section id="references-section" class="category">
+  <h2 onclick="toggleSection(this)">Sources</h2>
+  {{ range where .Site.RegularPages "Section" "sources" }}
+    {{ partial "entry-source.html" . }}
+  {{ end }}
+</section>
+
+<!-- ABOUT ME -->
+<section id="aboutme-section" class="category">
+  <h2 onclick="toggleSection(this)">About Me</h2>
+  {{ range where .Site.RegularPages "Section" "about" }}
+  <div class="entry">
+    <div class="entry-tag">CV</div>
+    <div class="entry-title">Who I am</div>
+    <div class="entry-cols">
+      <div class="entry-body">{{ .Content }}</div>
+      <div class="entry-aside">
+        <img src="/x/resource/image/profile.png" alt="Master Profile" class="profile-image">
+      </div>
+    </div>
+  </div>
+  {{ end }}
+</section>
+
+{{ end }}
