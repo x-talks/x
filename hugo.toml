@@ -1,0 +1,13 @@
+baseURL = "https://x-talks.github.io/x/"
+languageCode = "en-us"
+title = "Master Blog"
+
+[outputs]
+  home = ["HTML"]
+  section = ["HTML", "RSS"]
+
+[taxonomies]
+  tag = "tags"
+
+[params]
+  description = "Master Blog — daily observations, podcast, video"
