@@ -127,7 +127,7 @@
 
   section h2 {
     font-family: monospace;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid #bbb;
     padding-bottom: 0.5rem;
     margin-bottom: 1.5rem;
     cursor: pointer;
@@ -135,8 +135,9 @@
     letter-spacing: 0.2em;
     text-transform: uppercase;
     font-weight: normal;
+    color: #888;
   }
-  body.dark section h2 { border-color: #333; }
+  body.dark section h2 { border-color: #444; color: #666; }
 
   /* ── Entry structure ── */
   .entry { margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid #ddd; }
