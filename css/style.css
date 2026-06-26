@@ -490,10 +490,12 @@
 
   body.theme-swiss .entry-cols {
     grid-column: 2;
-    display: block;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
   }
 
-  body.theme-swiss .entry-aside { display: none; }
+  body.theme-swiss .entry-aside { display: block; border-left: 1px solid #ccc; padding-left: 0.85rem; }
 
   body.theme-swiss .entry-figure,
   body.theme-swiss .entry-figure--left,
@@ -580,8 +582,8 @@
     max-width: 520px;
   }
 
-  body.theme-magazine .entry:first-of-type .entry-cols { display: block; }
-  body.theme-magazine .entry:first-of-type .entry-aside { display: none; }
+  body.theme-magazine .entry:first-of-type .entry-cols { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+  body.theme-magazine .entry:first-of-type .entry-aside { display: block; }
 
   /* Subsequent entries = thumbnail cards */
   body.theme-magazine .entry:not(:first-of-type) {
