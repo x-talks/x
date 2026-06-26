@@ -10,6 +10,13 @@
 
 <body class="intro-active">
 
+<!-- THEME BAR -->
+<div id="theme-bar">
+  <button onclick="setTheme('editorial')" id="btn-editorial">Editorial</button>
+  <button onclick="setTheme('swiss')"     id="btn-swiss">E — Swiss</button>
+  <button onclick="setTheme('magazine')"  id="btn-magazine">H — Magazine</button>
+</div>
+
 <!-- INTRO -->
 <div id="intro-container">
   <img id="intro-bg"        src="/x/resource/image/intro-thumb.webp" alt="" aria-hidden="true" />
@@ -46,5 +53,19 @@
 </main>
 
 <script src="/x/js/script.js"></script>
+<script>
+function setTheme(t) {
+  document.body.classList.remove('theme-swiss','theme-magazine');
+  if (t !== 'editorial') document.body.classList.add('theme-' + t);
+  localStorage.setItem('theme-style', t);
+  document.querySelectorAll('#theme-bar button').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + t).classList.add('active');
+  if (t === 'magazine' && typeof applyMagazineTitles === 'function') applyMagazineTitles();
+}
+(function(){
+  var t = localStorage.getItem('theme-style') || 'editorial';
+  setTheme(t);
+})();
+</script>
 </body>
 </html>

@@ -98,3 +98,26 @@ document.addEventListener("DOMContentLoaded", () => {
   playBtn.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); loadAndPlay(); } });
   skip.addEventListener("click", hideIntro);
 });
+
+/* ── Magazine: split hero title into solid/outline spans ── */
+function applyMagazineTitles() {
+  document.querySelectorAll('.entry:first-of-type .entry-title').forEach(el => {
+    if (el.dataset.magSplit) return;
+    el.dataset.magSplit = '1';
+    const words = el.textContent.trim().split(/\s+/);
+    const mid   = Math.ceil(words.length / 2);
+    const line1 = words.slice(0, mid).join(' ');
+    const line2 = words.slice(mid).join(' ');
+    el.textContent = '';
+    const s1 = document.createElement('span');
+    s1.className = 'mag-solid';
+    s1.textContent = line1;
+    el.appendChild(s1);
+    if (line2) {
+      const s2 = document.createElement('span');
+      s2.className = 'mag-outline';
+      s2.textContent = line2;
+      el.appendChild(s2);
+    }
+  });
+}
