@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     container.classList.add("hide-animation");
     document.body.classList.remove("intro-active");
     setTimeout(() => { container.style.display = "none"; }, 600);
+    closeNav();
   }
 
   function loadAndPlay() {
