@@ -1,6 +1,7 @@
 ---
 title: "The architecture of the everyday"
 date: 2026-05-28
+mode: philosophy
 series: "Phenomenons"
 episode: 1
 image: "resource/image/profile.png"

@@ -1,6 +1,7 @@
 ---
 title: "Escaping the productivity trap"
 date: 2026-06-05
+mode: tech
 series: "Detrapped"
 episode: 1
 duration: "42 min"

@@ -1,6 +1,7 @@
 ---
 title: "Systems don't think — people do"
 date: 2026-05-15
+mode: tech
 series: "Axioms"
 url: "#"
 tags: [systems, thinking]

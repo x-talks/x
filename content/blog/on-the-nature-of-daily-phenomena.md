@@ -1,6 +1,7 @@
 ---
 title: "On the nature of daily phenomena"
 date: 2026-06-12
+mode: philosophy
 series: "Daily"
 episode: 1
 readtime: "5 min"

@@ -1,6 +1,7 @@
 ---
 title: "Conversations at the edge of the map"
 date: 2026-05-15
+mode: philosophy
 series: "X-Talks"
 episode: 1
 duration: "58 min"
