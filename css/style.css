@@ -118,6 +118,39 @@
   #dark-btn:hover { background: #f0f0f0; }
   body.dark #dark-btn:hover { background: #1a1a1a; }
 
+/* ── Mode toggle ── */
+#mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: monospace;
+  font-size: clamp(0.6rem, 1.5vw, 0.7rem);
+  letter-spacing: 0.15em;
+}
+
+.mode-label {
+  cursor: pointer;
+  color: #aaa;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.mode-label.active {
+  color: #000;
+  font-weight: bold;
+  border-bottom-color: #000;
+}
+
+.mode-slash {
+  color: #ccc;
+  cursor: default;
+}
+
+body.dark .mode-label.active { color: #e8e8e8; border-bottom-color: #e8e8e8; }
+body.dark .mode-label { color: #555; }
+body.dark .mode-slash { color: #333; }
+
   /* ── Main layout ── */
   main {
     max-width: 960px;
