@@ -129,17 +129,21 @@ function switchMode(mode) {
   document.getElementById('mode-tech').classList.toggle('active', mode === 'tech');
   document.getElementById('mode-philosophy').classList.toggle('active', mode === 'philosophy');
 
+  // Always reset to "all" view first so nav filter state doesn't bleed in
+  showCategory('all');
+
   // Show/hide entries by data-mode attribute
   document.querySelectorAll('.entry[data-mode]').forEach(entry => {
     entry.style.display = entry.dataset.mode === mode ? '' : 'none';
   });
 
-  // Hide sections that have no visible entries (except aboutme — always shown)
-  ['blog-section', 'podcast-section', 'youtube-section', 'references-section'].forEach(id => {
+  // Hide sections that have no visible entries
+  ['blog-section', 'podcast-section', 'youtube-section', 'references-section', 'aboutme-section'].forEach(id => {
     const section = document.getElementById(id);
     if (!section) return;
-    const hasVisible = Array.from(section.querySelectorAll('.entry[data-mode]'))
-      .some(e => e.style.display !== 'none');
+    const entries = section.querySelectorAll('.entry[data-mode]');
+    if (entries.length === 0) return; // no mode-tagged entries (e.g. aboutme) — leave visible
+    const hasVisible = Array.from(entries).some(e => e.style.display !== 'none');
     section.style.display = hasVisible ? '' : 'none';
   });
 
