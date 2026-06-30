@@ -1,6 +1,30 @@
 baseURL = "https://x-talks.github.io/x/"
-locale = "en-US"
 title = "Master Blog"
+
+defaultContentLanguage = "de"
+defaultContentLanguageInSubdir = false
+
+[languages]
+  [languages.de]
+    languageName = "Deutsch"
+    languageCode = "de-DE"
+    title = "Master Blog"
+    weight = 1
+    contentDir = "content/de"
+
+  [languages.en]
+    languageName = "English"
+    languageCode = "en-US"
+    title = "Master Blog"
+    weight = 2
+    contentDir = "content/en"
+
+  [languages.tr]
+    languageName = "Türkçe"
+    languageCode = "tr-TR"
+    title = "Master Blog"
+    weight = 3
+    contentDir = "content/tr"
 
 [outputs]
   home = ["HTML"]
