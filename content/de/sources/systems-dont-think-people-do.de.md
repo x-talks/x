@@ -1,0 +1,11 @@
+---
+title: "Systems don't think — people do"
+date: 2026-05-15
+mode: tech
+series: "Axioms"
+url: "#"
+tags: [systems, thinking]
+slug: "systems-dont-think-people-do"
+---
+
+Complex systems produce outcomes that no individual intended or foresaw. Understanding this changes how you assign blame and credit.

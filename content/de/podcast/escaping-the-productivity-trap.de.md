@@ -1,0 +1,13 @@
+---
+title: "Escaping the productivity trap"
+date: 2026-06-05
+mode: tech
+series: "Detrapped"
+episode: 1
+duration: "42 min"
+audio_url: "#"
+tags: [productivity, work]
+slug: "escaping-the-productivity-trap"
+---
+
+Why optimizing for output often destroys the conditions that make good work possible.
