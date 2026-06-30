@@ -122,3 +122,32 @@ function applyMagazineTitles() {
     }
   });
 }
+
+/* ── Mode toggle ── */
+function switchMode(mode) {
+  // Update toggle labels
+  document.getElementById('mode-tech').classList.toggle('active', mode === 'tech');
+  document.getElementById('mode-philosophy').classList.toggle('active', mode === 'philosophy');
+
+  // Show/hide entries by data-mode attribute
+  document.querySelectorAll('.entry[data-mode]').forEach(entry => {
+    entry.style.display = entry.dataset.mode === mode ? '' : 'none';
+  });
+
+  // Hide sections that have no visible entries (except aboutme — always shown)
+  ['blog-section', 'podcast-section', 'youtube-section', 'references-section'].forEach(id => {
+    const section = document.getElementById(id);
+    if (!section) return;
+    const hasVisible = Array.from(section.querySelectorAll('.entry[data-mode]'))
+      .some(e => e.style.display !== 'none');
+    section.style.display = hasVisible ? '' : 'none';
+  });
+
+  localStorage.setItem('mode', mode);
+}
+
+// Init on load
+(function () {
+  const saved = localStorage.getItem('mode') || 'tech';
+  switchMode(saved);
+})();
