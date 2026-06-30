@@ -8,7 +8,7 @@
 
 ## Goal
 
-A pipeline that lets the author write freely in German, guided to a complete 5-section structure, then automatically generates culturally adapted English and Turkish versions as Hugo multilingual content files — triggered by a single `/artikel` command in Claude Code.
+A pipeline that lets the author write freely in German, guided to a complete 5-section structure, then automatically generates culturally adapted English and Turkish versions as Hugo multilingual content files — triggered by a single `/article` command in Claude Code. Supports both TECH and PHILOSOPHY use cases, with mode-aware tone, section emphasis, and language register.
 
 ---
 
@@ -73,10 +73,26 @@ Every article must contain all 5 sections before translation proceeds:
 
 ---
 
-## The `/artikel` Workflow
+## The `/article` Workflow
 
 ### Trigger
-User types `/artikel` followed by (or followed by a paste of) their German text in Claude Code.
+User types `/article` followed by (or followed by a paste of) their German text in Claude Code.
+
+### Step 0 — Mode selection
+Before any processing, Claude asks: **TECH oder PHILOSOPHY?**
+
+The answer determines tone, quality criteria, and translation register throughout the entire pipeline:
+
+| Aspect | TECH | PHILOSOPHY |
+|--------|------|------------|
+| Hook | Concrete problem or observation | Striking universal phenomenon |
+| Core argument | Clear, falsifiable thesis | Reflective insight or reframing |
+| Exploration | Data, examples, systems, tools | Stories, analogies, thinkers, lived experience |
+| So what | Actionable, practical | Reflective, invites contemplation |
+| EN tone | Sharp, thought-leadership, direct | Essayistic, warm, intellectual |
+| TR tone | Professional, precise, modern | Narrative, philosophical, emotionally resonant |
+
+The chosen mode is written into `mode: tech` or `mode: philosophy` in all 3 generated files — enabling Hugo's existing mode-switching filter automatically.
 
 ### Step 1 — Extract structure
 Claude reads the German text and maps content to the 5 sections. Identifies which sections are present, complete, or missing/thin.
@@ -86,12 +102,19 @@ For each missing or thin section, Claude asks targeted questions **in German** t
 
 The dialogue continues until all 5 sections are solid. Claude does not proceed to translation until the quality gate passes.
 
-**Quality criteria per section:**
-- Hook: specific and striking — not generic
-- Context: names a concrete reason for relevance today
-- Core argument: one clear, defensible thesis — not a list
-- Exploration: at least 2 concrete examples or stories
-- So what: actionable or reflective — not a restatement of the argument
+**Quality criteria per section (TECH):**
+- Hook: names a concrete problem, gap, or observation in technology/work/systems
+- Context: connects to a current trend, tool, or challenge readers face
+- Core argument: one clear, falsifiable or actionable thesis
+- Exploration: at least 2 concrete examples — real tools, systems, situations
+- So what: practical — what should the reader do or think differently?
+
+**Quality criteria per section (PHILOSOPHY):**
+- Hook: specific and striking — names a universal human phenomenon
+- Context: names a concrete reason this phenomenon matters in life today
+- Core argument: one clear, defensible insight or reframing — not a list
+- Exploration: at least 2 stories, analogies, or references to thinkers/lived experience
+- So what: reflective — invites the reader to sit with something, not just act
 
 ### Step 3 — Structural confirmation
 Claude presents the extracted 5 sections back to the author for a quick confirmation before generating translations:
@@ -163,11 +186,12 @@ A guide committed to the repo root explaining:
 
 1. Write your German text anywhere (Notes, Word, phone, wherever)
 2. Open Claude Code in the project directory
-3. Type `/artikel` and paste your German text
-4. Answer Claude's questions until all 5 sections are complete
-5. Confirm the structure
-6. Claude generates and commits all 3 language files
-7. Push: `git push` → auto-deploys to GitHub Pages
+3. Type `/article` and paste your German text
+4. Answer: TECH or PHILOSOPHY?
+5. Answer Claude's questions until all 5 sections are complete
+6. Confirm the structure
+7. Claude generates and commits all 3 language files
+8. Push: `git push` → auto-deploys to GitHub Pages
 
 ---
 
@@ -187,7 +211,7 @@ Existing content (currently in `content/`) migrated to `content/de/` as part of 
 - No npm, no build tools, no external dependencies — pure Hugo + Claude Code
 - Existing entries (2 blog, 2 podcast, 1 youtube, 1 source) migrated to `content/de/` with `lang: de` added to frontmatter
 - Translations of existing entries are optional — only new entries go through the full pipeline
-- The `/artikel` skill lives in `~/.claude/skills/artikel/SKILL.md`
+- The `/article` skill lives in `~/.claude/skills/article/SKILL.md`
 
 ---
 
