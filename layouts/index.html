@@ -35,7 +35,7 @@
 <!-- ABOUT ME -->
 <section id="aboutme-section" class="category">
   <h2 onclick="toggleSection(this)">About Me</h2>
-  {{ with .Site.GetPage "/about" }}
+  {{ with site.GetPage "about" }}
   <div class="entry">
     <div class="entry-tag">CV</div>
     <div class="entry-title">Who I am</div>
