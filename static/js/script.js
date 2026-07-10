@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const thumbnail = document.getElementById("intro-thumbnail");
   const introBg   = document.getElementById("intro-bg");
   const playBtn   = document.getElementById("play-icon");
+  const langBadge = document.getElementById("intro-lang-badge");
   let video = null;
 
   function hideIntro() {
@@ -75,24 +76,44 @@ document.addEventListener("DOMContentLoaded", () => {
     closeNav();
   }
 
+  function resolveVideoPath(name, preferredLang, callback) {
+    const langs = [preferredLang, 'de', 'en', 'tr'].filter((v, i, a) => v && a.indexOf(v) === i);
+    let i = 0;
+    function tryNext() {
+      if (i >= langs.length) { callback(null, null); return; }
+      const lang = langs[i++];
+      const path = "resource/video/" + name + "-" + lang + ".mp4";
+      fetch(path, { method: 'HEAD' })
+        .then(r => r.ok ? callback(path, lang) : tryNext())
+        .catch(() => tryNext());
+    }
+    tryNext();
+  }
+
   function loadAndPlay() {
     if (video) return;
-    video = document.createElement("video");
-    video.src         = "resource/video/intro.mp4";
-    video.autoplay    = true;
-    video.muted       = false;
-    video.playsInline = true;
-    video.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;";
-    container.appendChild(video);
-
-    video.addEventListener("ended", hideIntro);
-    video.addEventListener("click", () => { video.paused ? video.play() : video.pause(); });
-
-    thumbnail.style.opacity = "0";
-    introBg.style.opacity   = "0";
-    document.getElementById("play-btn").style.opacity      = "0";
-    document.getElementById("play-btn").style.pointerEvents = "none";
-    skip.classList.add("visible");
+    const pageLang = (document.documentElement.lang || 'de').split('-')[0];
+    resolveVideoPath('intro', pageLang, (path, resolvedLang) => {
+      if (!path) return;
+      if (resolvedLang !== pageLang && langBadge) {
+        langBadge.textContent = resolvedLang.toUpperCase();
+        langBadge.style.display = 'inline-block';
+      }
+      video = document.createElement("video");
+      video.src         = path;
+      video.autoplay    = true;
+      video.muted       = false;
+      video.playsInline = true;
+      video.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;";
+      container.appendChild(video);
+      video.addEventListener("ended", hideIntro);
+      video.addEventListener("click", () => { video.paused ? video.play() : video.pause(); });
+      thumbnail.style.opacity = "0";
+      introBg.style.opacity   = "0";
+      document.getElementById("play-btn").style.opacity      = "0";
+      document.getElementById("play-btn").style.pointerEvents = "none";
+      skip.classList.add("visible");
+    });
   }
 
   playBtn.addEventListener("click", loadAndPlay);
