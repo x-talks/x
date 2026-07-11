@@ -3,6 +3,21 @@
   <div class="entry-title">{{ .Title }}</div>
   <div class="entry-meta">{{ .Date.Format "January 2, 2006" }}{{ if .Params.readtime }} · {{ .Params.readtime }} read{{ end }}</div>
 
+  {{ if .Params.video_teaser }}
+  <div class="article-teaser" data-video-slug="{{ .Params.slug }}">
+    <div class="article-teaser-thumb" aria-label="Play avatar intro">
+      <svg viewBox="0 0 100 100" width="20" height="20">
+        <circle cx="50" cy="50" r="48" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
+        <polygon points="38,28 38,72 74,50" fill="rgba(255,255,255,0.95)"/>
+      </svg>
+    </div>
+    <div class="article-teaser-info">
+      <span class="article-teaser-label">Avatar intro</span>{{ if .Params.teaser_duration }}<span class="article-teaser-duration"> · {{ .Params.teaser_duration }}</span>{{ end }}
+      <span class="article-teaser-desc">Watch a short intro to this article before reading.</span>
+    </div>
+  </div>
+  {{ end }}
+
   {{/* Top images */}}
   {{ range .Params.images }}{{ if eq .position "top" }}
   <figure class="entry-figure">
@@ -29,30 +44,13 @@
 
   <div class="entry-cols">
     <div class="entry-body">{{ .Content }}<div class="entry-clearfix"></div></div>
+    {{ if .Params.pullquote }}
     <div class="entry-aside">
-      {{ if .Params.pullquote }}
       <div class="pull-quote">"{{ .Params.pullquote }}"</div>
       {{ if .Params.readtime }}<div style="font-size:0.62rem;color:#888;margin-top:0.5rem;font-family:monospace">{{ .Params.readtime }} read <span class="format-badge">TEXT</span></div>{{ end }}
-      {{ end }}
-      {{ if .Params.video_teaser }}
-      <div class="entry-teaser-thumb" aria-label="Play avatar teaser">
-        <svg viewBox="0 0 100 100" width="24" height="24">
-          <circle cx="50" cy="50" r="48" fill="rgba(0,0,0,0.55)" stroke="rgba(255,255,255,0.9)" stroke-width="3"/>
-          <polygon points="38,28 38,72 74,50" fill="rgba(255,255,255,0.95)"/>
-        </svg>
-        {{ if .Params.teaser_duration }}<span class="entry-teaser-duration">{{ .Params.teaser_duration }}</span>{{ end }}
-      </div>
-      <div class="entry-teaser-label">&#9654; TEASER</div>
-      {{ end }}
     </div>
+    {{ end }}
   </div>
-
-  {{/* Magazine text button — outside cols, only renders when video_teaser true */}}
-  {{ if .Params.video_teaser }}
-  <div class="entry-teaser-text-btn">
-    &#9654; WATCH TEASER{{ if .Params.teaser_duration }} &middot; {{ .Params.teaser_duration }}{{ end }}
-  </div>
-  {{ end }}
 
   {{/* Bottom images */}}
   {{ range .Params.images }}{{ if eq .position "bottom" }}
