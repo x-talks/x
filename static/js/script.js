@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
       video.remove();
       video = null;
     }
+    loading = false;
     container.classList.add("hide-animation");
     document.body.classList.remove("intro-active");
     setTimeout(() => { container.style.display = "none"; }, 600);
@@ -115,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("play-btn").style.opacity      = "0";
       document.getElementById("play-btn").style.pointerEvents = "none";
       skip.classList.add("visible");
+      loading = false;
     });
   }
 
