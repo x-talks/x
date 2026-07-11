@@ -29,6 +29,7 @@
 
   <div class="entry-cols">
     <div class="entry-body">{{ .Content }}<div class="entry-clearfix"></div></div>
+    {{ if or .Params.pullquote .Params.video_teaser }}
     <div class="entry-aside">
       {{ if .Params.pullquote }}
       <div class="pull-quote">"{{ .Params.pullquote }}"</div>
@@ -45,6 +46,7 @@
       <div class="entry-teaser-label">&#9654; TEASER</div>
       {{ end }}
     </div>
+    {{ end }}
   </div>
 
   {{/* Magazine text button — outside cols, only renders when video_teaser true */}}
