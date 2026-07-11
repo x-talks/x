@@ -62,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const playBtn   = document.getElementById("play-icon");
   const langBadge = document.getElementById("intro-lang-badge");
   let video = null;
+  let loading = false;
 
   function hideIntro() {
     if (video) {
@@ -91,10 +92,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadAndPlay() {
-    if (video) return;
+    if (video || loading) return;
+    loading = true;
     const pageLang = (document.documentElement.lang || 'de').split('-')[0];
     resolveVideoPath('intro', pageLang, (path, resolvedLang) => {
-      if (!path) return;
+      if (!path) { loading = false; return; }
       if (resolvedLang !== pageLang && langBadge) {
         langBadge.textContent = resolvedLang.toUpperCase();
         langBadge.style.display = 'inline-block';
