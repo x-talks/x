@@ -196,16 +196,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     trigger.addEventListener('click', e => {
       e.stopPropagation();
-      resolveVideoPath(slug, pageLang, (path) => {
+      resolveVideoPath(slug, pageLang, (path, _lang) => {
         if (!path) return;
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9998;display:flex;align-items:center;justify-content:center;';
         const vid = document.createElement('video');
         vid.src = path;
         vid.autoplay = true;
         vid.playsInline = true;
         vid.controls = true;
-        vid.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;object-fit:contain;background:#000;z-index:9998;';
-        document.body.appendChild(vid);
-        function closeVid() { vid.pause(); vid.src = ''; vid.remove(); document.removeEventListener('keydown', onKey); }
+        vid.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;';
+        overlay.appendChild(vid);
+        document.body.appendChild(overlay);
+        function closeVid() { vid.pause(); vid.src = ''; overlay.remove(); document.removeEventListener('keydown', onKey); }
         function onKey(e) { if (e.key === 'Escape') closeVid(); }
         vid.addEventListener('ended', closeVid);
         vid.addEventListener('click', () => { vid.paused ? vid.play() : vid.pause(); });
@@ -218,18 +221,22 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.article-teaser[data-video-slug]').forEach(strip => {
     const slug = strip.dataset.videoSlug;
     strip.addEventListener('click', () => {
-      resolveVideoPath(slug, pageLang, (path) => {
+      resolveVideoPath(slug, pageLang, (path, _lang) => {
         if (!path) return;
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9998;display:flex;align-items:center;justify-content:center;';
         const vid = document.createElement('video');
         vid.src = path;
         vid.autoplay = true;
         vid.playsInline = true;
         vid.controls = true;
-        vid.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;object-fit:contain;background:#000;z-index:9998;';
-        document.body.appendChild(vid);
-        function closeVid() { vid.pause(); vid.src = ''; vid.remove(); document.removeEventListener('keydown', onKey); }
+        vid.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;';
+        overlay.appendChild(vid);
+        document.body.appendChild(overlay);
+        function closeVid() { vid.pause(); vid.src = ''; overlay.remove(); document.removeEventListener('keydown', onKey); }
         function onKey(e) { if (e.key === 'Escape') closeVid(); }
         vid.addEventListener('ended', closeVid);
+        vid.addEventListener('click', () => { vid.paused ? vid.play() : vid.pause(); });
         document.addEventListener('keydown', onKey);
       });
     });
