@@ -55,8 +55,8 @@
 
   <!-- LANGUAGE SWITCHER -->
   <div id="lang-switcher" style="font-family:monospace;font-size:0.62rem;letter-spacing:0.12em;display:flex;gap:0.4rem;align-items:center;">
-    {{ range site.Languages }}
-    <a href="{{ relLangURL "/" }}" style="color:{{ if eq .Lang $.Site.Language.Lang }}#000{{ else }}#aaa{{ end }};text-decoration:none;text-transform:uppercase;border-bottom:{{ if eq .Lang $.Site.Language.Lang }}2px solid #000{{ else }}2px solid transparent{{ end }};padding-bottom:1px;">{{ .Label }}</a>
+    {{ range site.Sites }}
+    <a href="{{ .Home.Permalink }}" style="color:{{ if eq .Language.Lang $.Site.Language.Lang }}#000{{ else }}#aaa{{ end }};text-decoration:none;text-transform:uppercase;border-bottom:{{ if eq .Language.Lang $.Site.Language.Lang }}2px solid #000{{ else }}2px solid transparent{{ end }};padding-bottom:1px;">{{ .Language.Label }}</a>
     {{ end }}
   </div>
 </header>
