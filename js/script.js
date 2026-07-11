@@ -60,7 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const thumbnail = document.getElementById("intro-thumbnail");
   const introBg   = document.getElementById("intro-bg");
   const playBtn   = document.getElementById("play-icon");
+  const langBadge = document.getElementById("intro-lang-badge");
   let video = null;
+  let loading = false;
 
   function hideIntro() {
     if (video) {
@@ -69,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
       video.remove();
       video = null;
     }
+    loading = false;
     container.classList.add("hide-animation");
     document.body.classList.remove("intro-active");
     setTimeout(() => { container.style.display = "none"; }, 600);
@@ -76,23 +79,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadAndPlay() {
-    if (video) return;
-    video = document.createElement("video");
-    video.src         = "resource/video/intro.mp4";
-    video.autoplay    = true;
-    video.muted       = false;
-    video.playsInline = true;
-    video.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;";
-    container.appendChild(video);
-
-    video.addEventListener("ended", hideIntro);
-    video.addEventListener("click", () => { video.paused ? video.play() : video.pause(); });
-
-    thumbnail.style.opacity = "0";
-    introBg.style.opacity   = "0";
-    document.getElementById("play-btn").style.opacity      = "0";
-    document.getElementById("play-btn").style.pointerEvents = "none";
-    skip.classList.add("visible");
+    if (video || loading) return;
+    loading = true;
+    const pageLang = (document.documentElement.lang || 'de').split('-')[0];
+    resolveVideoPath('intro', pageLang, (path, resolvedLang) => {
+      if (!path) { loading = false; return; }
+      if (resolvedLang !== pageLang && langBadge) {
+        langBadge.textContent = resolvedLang.toUpperCase();
+        langBadge.style.display = 'inline-block';
+      }
+      video = document.createElement("video");
+      video.src         = path;
+      video.autoplay    = true;
+      video.muted       = false;
+      video.playsInline = true;
+      video.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;";
+      container.appendChild(video);
+      video.addEventListener("ended", hideIntro);
+      video.addEventListener("click", () => { video.paused ? video.play() : video.pause(); });
+      thumbnail.style.opacity = "0";
+      introBg.style.opacity   = "0";
+      document.getElementById("play-btn").style.opacity      = "0";
+      document.getElementById("play-btn").style.pointerEvents = "none";
+      skip.classList.add("visible");
+      loading = false;
+    });
   }
 
   playBtn.addEventListener("click", loadAndPlay);
@@ -155,3 +166,79 @@ function switchMode(mode) {
   const saved = localStorage.getItem('mode') || 'tech';
   switchMode(saved);
 })();
+
+/* ── Shared video resolver ── */
+function resolveVideoPath(name, preferredLang, callback) {
+  const langs = [preferredLang, 'de', 'en', 'tr'].filter((v, i, a) => v && a.indexOf(v) === i);
+  let i = 0;
+  function tryNext() {
+    if (i >= langs.length) { callback(null, null); return; }
+    const lang = langs[i++];
+    const path = "resource/video/" + name + "-" + lang + ".mp4";
+    fetch(path, { method: 'HEAD' })
+      .then(r => r.ok ? callback(path, lang) : tryNext())
+      .catch(() => tryNext());
+  }
+  tryNext();
+}
+
+/* ── Article teaser playback ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const pageLang = (document.documentElement.lang || 'de').split('-')[0];
+
+  // List view teasers (entry-teaser-thumb and entry-teaser-text-btn)
+  document.querySelectorAll('[data-video-slug]').forEach(entry => {
+    const slug = entry.dataset.videoSlug;
+    const thumb = entry.querySelector('.entry-teaser-thumb');
+    const textBtn = entry.querySelector('.entry-teaser-text-btn');
+    const trigger = thumb || textBtn;
+    if (!trigger || !slug) return;
+
+    trigger.addEventListener('click', e => {
+      e.stopPropagation();
+      resolveVideoPath(slug, pageLang, (path, _lang) => {
+        if (!path) return;
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9998;display:flex;align-items:center;justify-content:center;';
+        const vid = document.createElement('video');
+        vid.src = path;
+        vid.autoplay = true;
+        vid.playsInline = true;
+        vid.controls = true;
+        vid.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;';
+        overlay.appendChild(vid);
+        document.body.appendChild(overlay);
+        function closeVid() { vid.pause(); vid.src = ''; overlay.remove(); document.removeEventListener('keydown', onKey); }
+        function onKey(e) { if (e.key === 'Escape') closeVid(); }
+        vid.addEventListener('ended', closeVid);
+        vid.addEventListener('click', () => { vid.paused ? vid.play() : vid.pause(); });
+        document.addEventListener('keydown', onKey);
+      });
+    });
+  });
+
+  // Article page teaser strip (.article-teaser)
+  document.querySelectorAll('.article-teaser[data-video-slug]').forEach(strip => {
+    const slug = strip.dataset.videoSlug;
+    strip.addEventListener('click', () => {
+      resolveVideoPath(slug, pageLang, (path, _lang) => {
+        if (!path) return;
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9998;display:flex;align-items:center;justify-content:center;';
+        const vid = document.createElement('video');
+        vid.src = path;
+        vid.autoplay = true;
+        vid.playsInline = true;
+        vid.controls = true;
+        vid.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;';
+        overlay.appendChild(vid);
+        document.body.appendChild(overlay);
+        function closeVid() { vid.pause(); vid.src = ''; overlay.remove(); document.removeEventListener('keydown', onKey); }
+        function onKey(e) { if (e.key === 'Escape') closeVid(); }
+        vid.addEventListener('ended', closeVid);
+        vid.addEventListener('click', () => { vid.paused ? vid.play() : vid.pause(); });
+        document.addEventListener('keydown', onKey);
+      });
+    });
+  });
+});
