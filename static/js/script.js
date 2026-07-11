@@ -78,20 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
     closeNav();
   }
 
-  function resolveVideoPath(name, preferredLang, callback) {
-    const langs = [preferredLang, 'de', 'en', 'tr'].filter((v, i, a) => v && a.indexOf(v) === i);
-    let i = 0;
-    function tryNext() {
-      if (i >= langs.length) { callback(null, null); return; }
-      const lang = langs[i++];
-      const path = "resource/video/" + name + "-" + lang + ".mp4";
-      fetch(path, { method: 'HEAD' })
-        .then(r => r.ok ? callback(path, lang) : tryNext())
-        .catch(() => tryNext());
-    }
-    tryNext();
-  }
-
   function loadAndPlay() {
     if (video || loading) return;
     loading = true;
@@ -180,3 +166,72 @@ function switchMode(mode) {
   const saved = localStorage.getItem('mode') || 'tech';
   switchMode(saved);
 })();
+
+/* ── Shared video resolver ── */
+function resolveVideoPath(name, preferredLang, callback) {
+  const langs = [preferredLang, 'de', 'en', 'tr'].filter((v, i, a) => v && a.indexOf(v) === i);
+  let i = 0;
+  function tryNext() {
+    if (i >= langs.length) { callback(null, null); return; }
+    const lang = langs[i++];
+    const path = "resource/video/" + name + "-" + lang + ".mp4";
+    fetch(path, { method: 'HEAD' })
+      .then(r => r.ok ? callback(path, lang) : tryNext())
+      .catch(() => tryNext());
+  }
+  tryNext();
+}
+
+/* ── Article teaser playback ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const pageLang = (document.documentElement.lang || 'de').split('-')[0];
+
+  // List view teasers (entry-teaser-thumb and entry-teaser-text-btn)
+  document.querySelectorAll('[data-video-slug]').forEach(entry => {
+    const slug = entry.dataset.videoSlug;
+    const thumb = entry.querySelector('.entry-teaser-thumb');
+    const textBtn = entry.querySelector('.entry-teaser-text-btn');
+    const trigger = thumb || textBtn;
+    if (!trigger || !slug) return;
+
+    trigger.addEventListener('click', e => {
+      e.stopPropagation();
+      resolveVideoPath(slug, pageLang, (path) => {
+        if (!path) return;
+        const vid = document.createElement('video');
+        vid.src = path;
+        vid.autoplay = true;
+        vid.playsInline = true;
+        vid.controls = true;
+        vid.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;object-fit:contain;background:#000;z-index:9998;';
+        document.body.appendChild(vid);
+        function closeVid() { vid.pause(); vid.src = ''; vid.remove(); document.removeEventListener('keydown', onKey); }
+        function onKey(e) { if (e.key === 'Escape') closeVid(); }
+        vid.addEventListener('ended', closeVid);
+        vid.addEventListener('click', () => { vid.paused ? vid.play() : vid.pause(); });
+        document.addEventListener('keydown', onKey);
+      });
+    });
+  });
+
+  // Article page teaser strip (.article-teaser)
+  document.querySelectorAll('.article-teaser[data-video-slug]').forEach(strip => {
+    const slug = strip.dataset.videoSlug;
+    strip.addEventListener('click', () => {
+      resolveVideoPath(slug, pageLang, (path) => {
+        if (!path) return;
+        const vid = document.createElement('video');
+        vid.src = path;
+        vid.autoplay = true;
+        vid.playsInline = true;
+        vid.controls = true;
+        vid.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;object-fit:contain;background:#000;z-index:9998;';
+        document.body.appendChild(vid);
+        function closeVid() { vid.pause(); vid.src = ''; vid.remove(); document.removeEventListener('keydown', onKey); }
+        function onKey(e) { if (e.key === 'Escape') closeVid(); }
+        vid.addEventListener('ended', closeVid);
+        document.addEventListener('keydown', onKey);
+      });
+    });
+  });
+});
